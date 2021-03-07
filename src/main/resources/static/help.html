@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>UrlShortener</title>
+</head>
+<body leftmargin="50">
+<h1>UrlShortener</h1> 
+    <h2></h2> 
+<p>
+<br/>UrlShortener is HTTP service that serves for URL shortening with following functionalities:
+<p style="font-size:14px; color:#6d117a;">
+  <span style="color: #000000">- Registration of web address (API)
+<br/>- Redirecting of clients according to short URL
+<br/>- Statistics of visit (API)</span>
+</p>
+<br/>
+<br/>
+<h2>Installation</h2>
+<br/>To install and run UrlShortener follow this steps:
+<p style="font-size:14px; color:#6d117a;">
+  <span style="color: #000000">1. Download the file with name UrlShortener.jar
+<br/>2. Run the file in command line or terminal by simply entering <b>java -jar UrlShortener.jar</b>
+<br/>Note: If you don't have java installed, you can download it here: <a href="https://www.java.com/en/download/help/download_options.html">get java</a></span>
+</p>
+<br/>
+<br/>
+<h2>Usage</h2>
+<br/>UrlShortener service has two parts: configuration and user part.
+<br/>
+<br/><b>Configuration part</b> is called through REST with JSON parameters and serves for:
+<p style="font-size:14px; color:#6d117a;">
+  <span style="color: #000000">Account opening
+<br/>Registration of URLs in Shortener service
+<br/>Statistics fetching</span>
+</p>
+<br/><b>User part</b> serves for:
+<p style="font-size:14px; color:#6d117a;">
+<span style="color: #000000">Redirection</span>
+</p>
+<br/>
+<br/>
+<br/>
+<br/><b>ACCOUNT OPENING</b>
+<p style="font-size:14px; color:#ff0000; font-weight:bold;">
+  POST
+  <span style="color: #538b01">   /account</span>
+</p>
+<br/>Body parameters
+<p style="font-size:14px; color:#0000a0; font-weight:bold;">
+  accountId <span style="color: #000000; font-weight:normal">(required), </span> 
+  <span style="color: #000000">TYPE </span> 
+  <span style="color: #000000; font-weight:normal">string</span> 
+</p>
+<br/>Response parameters: 
+<p style="font-size:14px; color:#6d117a;">
+  <span style="color: #000000">success: true | false, <br/>description: Your account is opened | User with that ID already exists, <br/>password: (is returned only in case of successful registration)</span>
+</p>
+<br/>Request example: 
+<p style="font-size:14px; color:#6d117a; font-weight:bold;">
+  curl 
+  <span style="color: #000000">-X POST localhost:8080/account -H 'Content-Type:application/json' -d </span>
+  '{"account":"anamarija"}'
+</p>
+<br/>Response example:
+<p style="font-size:14px; color:#000000; font-weight:bold;">
+  {<br/>"success":"true",<br/>"description":"Your account is opened",<br/>"password":"iBCN3ZAL"<br/>}
+</p>
+<br/>
+<br/>
+
+
+
+
+<br/><b>REGISTRATION OF URLS IN SHORTENER SERVICE</b>
+<p style="font-size:14px; color:#ff0000; font-weight:bold;">
+  POST
+  <span style="color: #538b01">   /register</span>
+</p>
+<br/>Request headers
+<p style="font-size:14px; color:#0000a0; font-weight:bold;">
+  authorization <span style="color: #000000; font-weight:normal">(required), </span> 
+  <span style="color: #000000">TYPE </span> 
+  <span style="color: #000000; font-weight:normal">string "username:password"</span> 
+</p>
+<br/>Body parameters
+<p style="font-size:14px; color:#0000a0; font-weight:bold;">
+  URL <span style="color: #000000; font-weight:normal">(required), </span> 
+  <span style="color: #000000">TYPE </span> 
+  <span style="color: #000000; font-weight:normal">string</span>
+  <br />
+  redirect type <span style="color: #000000; font-weight:normal">(optional, 302 default), </span> 
+  <span style="color: #000000">TYPE </span> 
+  <span style="color: #000000; font-weight:normal">int (301 | 302)</span> 
+</p>
+<br/>Response parameters: 
+<p style="font-size:14px; color:#6d117a;">
+  <span style="color: #000000">in case of successful registration response is short URL {shortUrl:'http://short.com/xYswlE12'}</span>
+</p>
+<br/>Request example: 
+<p style="font-size:14px; color:#6d117a; font-weight:bold;">
+  curl 
+  <span style="color: #000000">-X POST localhost:8080/register -H 'Accept: application/json' -H 'Content-Type: application/json' -H  </span>
+  'authorization:anamarija:iBCN3ZAL'
+  <span style="color: #000000"> -d </span>
+  '{"url":"http://stackoverflow.com/questions/1567929/website-safe-data-access-architecture-question?rq=1","redirectType":301}'
+</p>
+<br/>Response example:
+<p style="font-size:14px; color:#000000; font-weight:bold;">
+  {<br/>"shortUrl":"http://short.com/3v8r5a"<br/>}
+</p>
+<br/>
+
+
+
+
+<br/>
+<br/><b>STATISTICS FETCHING</b>
+<p style="font-size:14px; color:#ff0000; font-weight:bold;">
+  GET
+  <span style="color: #538b01">   /statistic/{AccountId}</span>
+</p>
+<br/>Request headers
+<p style="font-size:14px; color:#0000a0; font-weight:bold;">
+  authorization <span style="color: #000000; font-weight:normal">(required), </span> 
+  <span style="color: #000000">TYPE </span> 
+  <span style="color: #000000; font-weight:normal">string "username:password"</span> 
+</p>
+<br/>Response parameters: 
+<p style="font-size:14px; color:#6d117a;">
+  <span style="color: #000000">in case of successful registration response is JSON object with map key:value, where key is registered URL and value is number of its calls</span>
+</p>
+<br/>Request example: 
+<p style="font-size:14px; color:#6d117a; font-weight:bold;">
+  curl 
+  <span style="color: #6d117a">-v localhost:8080/statistic/anamarija</span>
+  <span style="color: #000000"> -H 'Accept: application/json' -H </span>
+  'authorization:anamarija:iBCN3ZAL'
+</p>
+<br/>Response example:
+<p style="font-size:14px; color:#000000; font-weight:bold;">
+  {<br/>"http://stackoverflow.com/questions/1567929/website-safe-data-access-architecture-question?rq=1":2,<br/>"https://stackoverflow.com/questions/54075183/zero-length-part-of-url-in-spring-controller-requestmapping-pathvariable-breaks":1,<br/>"https://stackoverflow.com/questions/17955777/redirect-to-an-external-url-from-controller-action-in-spring-mvc":1<br/>}
+</p>
+<br/>
+<br/>
+<br/>
+
+
+
+ 
+
+
+<br/>
+<br/><b>REDIRECTION</b>
+<br/>
+<br/>Redirection happens when user enters short URL and gets redirected to original long url.
+<br/>
+<br/>Request example:
+<p style="font-size:14px; color:#6d117a; font-weight:bold;">
+localhost:8080/short.com/3v8r5a
+</p>
+<br/>Response example: 
+<p style="font-size:14px; color:#000000; font-weight:bold;">
+  {<br/>http://stackoverflow.com/questions/1567929/website-safe-data-access-architecture-question?rq=1<br/>}
+</p> 
+
+
+<br/>
+<br/>
+<br/>
+</body>
+</html>
